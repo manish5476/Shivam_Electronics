@@ -37,7 +37,7 @@ export class AuthService {
   // https://4000-idx-shivamelectronicsbackend-1736329366153.cluster-e3wv6awer5h7kvayyfoein2u4a.cloudworkstations.dev/api/v1/users/login
   login(data: any): Observable<any> {
     return this.http
-      .post<any>(' http://localhost:4000/api/v1/users/login', data)
+      .post<any>('https://4000-idx-shivamelectronicsbackendgit-1736444920605.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api/v1/users/login', data)
       .pipe(
         map((response) => {
           if (isPlatformBrowser(this.platformId) && response.token) {
@@ -55,7 +55,7 @@ export class AuthService {
 
   signUp(data: any): Observable<any> {
     return this.http
-      .post<any>(' http://localhost:4000/api/v1/users/signup', data)
+      .post<any>('https://4000-idx-shivamelectronicsbackendgit-1736444920605.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api/v1/users/signup', data)
       .pipe(
         map((response) => {
           if (isPlatformBrowser(this.platformId) && response.token) {

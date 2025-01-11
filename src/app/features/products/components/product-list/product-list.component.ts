@@ -178,17 +178,79 @@ filterSearch(event: Event): void {
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-                this.selectedProducts = null;
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Products Deleted',
-                    life: 3000
+                const idsToDelete: string[] = []; // Type the array explicitly
+                this.selectedProducts?.forEach((item: any) => {
+                    idsToDelete.push(item._id);
+                });
+    
+                if (idsToDelete.length === 0) { // Handle case where no products are selected
+                  this.messageService.add({
+                    severity: 'warn',
+                    summary: 'No Selection',
+                    detail: 'Please select products to delete.',
+                    life: 3000,
+                  });
+                  return; // Stop further execution
+                }
+    
+                this.apiService.deleteMultipleProducts(idsToDelete).subscribe({ // Pass idsToDelete
+                    next: (response) => {
+                        console.log('Items deleted:', response);
+                        this.messageService.add({ // Move success message inside subscribe
+                            severity: 'success',
+                            summary: 'Successful',
+                            detail: 'Products Deleted',
+                            life: 3000
+                        });
+                         this.products = this.products.filter(product => !idsToDelete.includes(product.id));
+                        this.selectedProducts = [];
+                    },
+                    error: (error) => {
+                        console.error('Error deleting items:', error);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Failed to delete products.',
+                            life: 3000
+                        });
+                    }
                 });
             }
         });
     }
+
+    // deleteSelectedProducts() {
+    //     this.confirmationService.confirm({
+    //         message: 'Are you sure you want to delete the selected products?',
+    //         header: 'Confirm',
+    //         icon: 'pi pi-exclamation-triangle',
+    //         accept: () => {
+    //             // this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
+    //             // this.selectedProducts = null;
+    //              // this.products = this.products.filter((val) => val.id !== product.id);
+    //             // this.product = {};
+    //             const idsToDelete = [                  ];         
+    //               this.selectedProducts?.forEach((item:any)=>{
+    //                 idsToDelete.push(item.id)
+    //               })
+    //               this.apiService.deleteMultipleProducts(!this.selectedProducts).subscribe({
+    //                   next: (response) => {
+    //                       console.log('Items deleted:', response);
+    //                   },
+    //                   error: (error) => {
+    //                       console.error('Error deleting items:', error);
+    //                   }
+    //               });
+    //             this.messageService.add({
+    //                 severity: 'success',
+    //                 summary: 'Successful',
+    //                 detail: 'Products Deleted',
+    //                 life: 3000
+    //             });
+    //         }
+    //     });
+    // }
+    
 
     hideDialog() {
         this.productDialog = false;

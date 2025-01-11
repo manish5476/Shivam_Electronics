@@ -14,7 +14,7 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = 'http://localhost:4000/api';
+  private baseUrl = 'https://4000-idx-shivamelectronicsbackendgit-1736444920605.cluster-a3grjzek65cxex762e4mwrzl46.cloudworkstations.dev/api';
   public headers: any;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
@@ -72,14 +72,6 @@ export class ApiService {
     return this.http.post<any>(endpoint, data, { headers });
   }
 
-  // Update a product
-  // updateProduct(productId: string, data: any): Observable<any> {
-  //   const endpoint = `${this.baseUrl}/v1/products/${productId}`;
-  //   return this.http
-  //     .put(endpoint, data)
-  //     .pipe(catchError((error) => this.handleError('updateProduct', error)));
-  // }
-
 
   updateProduct(productId: string, data: any): Observable<any> {
     const endpoint = `${this.baseUrl}/v1/products/${productId}`;
@@ -106,6 +98,15 @@ export class ApiService {
       .delete(endpoint)
       .pipe(catchError((error) => this.handleError('deleteProduct', error)));
   }
+
+  deleteMultipleProducts(ids: string[]): Observable<any> { // Return an Observable
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: { ids } // Or body: JSON.stringify({ ids: ids })
+    };
+    return this.http.delete(`${this.baseUrl}/v1/products/deletemany`, httpOptions);
+  }
+
 
   // Centralized error handling
   private handleError(method: string, error: any): Observable<never> {
